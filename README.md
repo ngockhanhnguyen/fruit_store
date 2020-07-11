@@ -5,7 +5,8 @@
 
 First, clone repository and run application as containers.
 ```
-$ git clone
+$ git clone git@github.com:ngockhanhnguyen/fruit_store.git
+$ cd fruit_store
 # docker-compose up -d 
 ```
 Then, add domain to /etc/hosts because it just a demo:
@@ -13,7 +14,7 @@ Then, add domain to /etc/hosts because it just a demo:
 # echo "127.0.0.1 fruitst.com" >> /etc/hosts
 ```
 Finally, open browser and redirect to http://fruitst.com:8080/ui/. Welcome to Fruit store API definition, let's try:
-![API definition page](docs/fruit_store_swagger.png)
+![API definition page](docs/fruit_api.png)
 
 ### Usage:
 The application support two APIs to processing order as you know. I added timezone offset param on header of both API, on purpose, 
