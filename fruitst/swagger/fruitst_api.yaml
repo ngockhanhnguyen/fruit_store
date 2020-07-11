@@ -1,0 +1,177 @@
+swagger: "2.0"
+info:
+  description: "APIs for fruit store, one and only on the world, seen."
+  version: "1.0.0"
+  title: "Fruit Store API"
+  contact:
+    email: "ngockhanh96ptit@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "fruitst.com:8080"
+basePath: "/"
+tags:
+  - name: "order"
+    description: "API related to order"
+schemes:
+- "https"
+- "http"
+paths:
+  /order:
+    post:
+      tags:
+        - "order"
+      summary: "Place an order for fruits"
+      description: ""
+      operationId: "place_order"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: header
+          name: "Timezone-Offset"
+          type: number
+          description: "number of hours that client time zone is ahead of GMT"
+          required: true
+        - in: "body"
+          name: "body"
+          description: "order placed for purchasing fruits"
+          required: true
+          schema:
+            type: "object"
+            $ref: "#/definitions/OrderRequest"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: "object"
+                $ref: "#/definitions/OrderResponse"
+        400:
+          description: "Error because client issues"
+          schema:
+            $ref: "#/definitions/ApiClientErrorResponse"
+        500:
+          description: "Error because server issues"
+          schema:
+            $ref: "#/definitions/ApiErrorResponse"
+      x-swagger-router-controller: "fruitst.resources.order"
+  /report:
+    get:
+      tags:
+        - "order"
+      summary: "Get reports what fruits and their amount required to prepare within a date range"
+      description: ""
+      operationId: "get_order_report"
+      produces:
+        - "application/json"
+      parameters:
+        - in: header
+          name: "Timezone-Offset"
+          type: number
+          description: "number of hours that client time zone is ahead of GMT"
+          required: true
+        - name: "from"
+          in: "query"
+          description: "start date of report"
+          required: true
+          type: "integer"
+        - name: "to"
+          in: "query"
+          description: "end date of report"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: 'object'
+                properties:
+                  data:
+                    type: "object"
+            example: {"data": {"mango": 5, "orange": 6}}
+        400:
+          description: "Error because client issues"
+          schema:
+            $ref: "#/definitions/ApiClientErrorResponse"
+        500:
+          description: "Error because server issues"
+          schema:
+            $ref: "#/definitions/ApiErrorResponse"
+      x-swagger-router-controller: "fruitst.resources.order"
+definitions:
+  OrderRequest:
+    type: "object"
+    properties:
+      date:
+        type: "integer"
+        description: "the date of the year when their order should be ready at timestamp format (in seconds)"
+        example: 1
+      fruits:
+        type: "object"
+        description: "key-value pairs representing what kind of fruits and its amount in kg"
+        example: {
+          "mango": 5,
+          "orange": 6
+        }
+    xml:
+      name: "Order"
+  OrderResponse:
+    type: "object"
+    properties:
+      date:
+        type: "integer"
+        description: "the date of the year when their order should be ready at timestamp format (in seconds)"
+        example: 1
+      fruits:
+        type: "object"
+        description: "key-value pairs representing what kind of fruits and its amount in kg"
+        example: {
+          "mango": 5,
+          "orange": 6
+        }
+    xml:
+      name: "Order"
+  ApiClientErrorResponse:
+    type: "object"
+    required:
+      - "status"
+      - "detail"
+    properties:
+      status:
+        type: "integer"
+        format: "int32"
+        example: 1000
+        description: "Mã lỗi"
+      detail:
+        type: "string"
+        example: "Invalid param"
+        description: "Thông tin lỗi"
+      title:
+        type: "string"
+        description: "Title lỗi"
+      type:
+        type: "string"
+        description: "Type lỗi"
+      error_code:
+        type: "integer"
+        description: "Mã http"
+      instance:
+        type: "string"
+        description: "url của api gặp lỗi"
+    xml:
+      name: "ApiErrorResponse"
+  ApiErrorResponse:
+    type: "object"
+    properties:
+      error:
+        type: "object"
+    example: {"error": {"code": "000", "message": "Unknown error"}}
+    xml:
+      name: "ApiErrorResponse"

@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+
+  fruitst_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fruitst_api
+    restart: always
+    environment:
+      ENV: production
+    ports:
+      - 8080:8080
+    volumes:
+      - ./configs.py:/opt/fruitst_api/configs.py
+
+  postgres:
+    image: postgres:11
+    container_name: fruitst_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: fruitst
+      POSTGRES_PASSWORD: 8sYdhrF59+EtvfHue+Q=
+    ports:
+      - 5432:5432
+    volumes:
+      - database-data:/var/lib/postgresql/data/
+      - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+
+volumes:
+  database-data:
+    driver: local
